@@ -8,7 +8,7 @@ export default async function Home({
   const resolvedSearchParams = await searchParams;
 
   return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8 bg-gradient-to-br from-gray-100 to-gray-200">
+      <main className="flex h-screen flex-col items-center justify-center p-4 bg-white">
         <PaymentStatus searchParams={resolvedSearchParams} />
       </main>
   )

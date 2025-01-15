@@ -1,5 +1,5 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertCircle, CheckCircle } from 'lucide-react'
+import Image from 'next/image'
+
 
 interface PaymentStatusProps {
   searchParams: { [key: string]: string | string[] | undefined }
@@ -18,6 +18,7 @@ interface PaymentInfo {
 const requiredParams: (keyof PaymentInfo)[] = ['errorCode', 'merchantCode', 'orderId', 'transAmount', 'transactionStatus'];
 
 export function PaymentStatus({ searchParams }: PaymentStatusProps) {
+
   const paymentInfo: Partial<PaymentInfo> = {
     errorCode: searchParams.errorCode as string,
     merchantCode: searchParams.merchantCode as string,
@@ -32,61 +33,86 @@ export function PaymentStatus({ searchParams }: PaymentStatusProps) {
 
   if (missingParams.length > 0) {
     return (
-        <Card className="w-full max-w-2xl shadow-2xl transition-all duration-300 hover:shadow-3xl">
-          <CardHeader className="bg-red-500 text-white">
-            <CardTitle className="text-3xl sm:text-4xl flex items-center">
-              <AlertCircle className="mr-2 h-8 w-8 sm:h-10 sm:w-10" />
-              Lỗi
-            </CardTitle>
-            <CardDescription className="text-white text-xl sm:text-2xl">
-              Thiếu thông tin cần thiết
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <p className="text-xl sm:text-2xl text-gray-700 mb-4">
-              Không thể xử lý yêu cầu do thiếu các tham số sau:
+        <div className="w-full mx-auto bg-white h-screen flex flex-col">
+          <header className="flex justify-between items-center p-3 border-b">
+            <Image
+                src="/VTM.png"
+                alt="Viettel Money"
+                width={120}
+                height={40}
+            />
+          </header>
+
+          <main className="flex-1 flex flex-col items-center px-4 pt-8">
+            <div className="w-48 h-48 mb-6">
+              <Image
+                  src="/Fail.jpg"
+                  alt="Error Illustration"
+                  width={200}
+                  height={200}
+                  priority
+              />
+            </div>
+            <h1 className="text-red-500 text-2xl font-semibold mb-2">
+              Có lỗi xảy ra
+            </h1>
+            <p className="text-gray-500 mb-4 text-center">
+              Thiếu các tham số: {missingParams.join(', ')}
             </p>
-            <p className="text-lg sm:text-xl text-red-600 font-semibold">
-              {missingParams.join(', ')}
-            </p>
-          </CardContent>
-        </Card>
-    )
+          </main>
+        </div>
+    );
   }
 
   const isSuccess = paymentInfo.transactionStatus === process.env.SUCCESS_CODE;
-
-  const cardStyle = isSuccess
-      ? "bg-gradient-to-r from-green-400 to-green-600 text-white"
-      : "bg-gradient-to-r from-red-400 to-red-600 text-white";
+  const amount = parseInt(paymentInfo.transAmount ?? '0').toLocaleString('vi-VN');
 
   return (
-      <Card className="w-full max-w-2xl shadow-2xl transition-all duration-300 hover:shadow-3xl">
-        <CardHeader className={cardStyle}>
-          <CardTitle className="text-3xl sm:text-4xl flex items-center">
-            {isSuccess ? <CheckCircle className="mr-2 h-8 w-8 sm:h-10 sm:w-10" /> : <AlertCircle className="mr-2 h-8 w-8 sm:h-10 sm:w-10" />}
-            {isSuccess ? 'Thanh toán thành công' : 'Thanh toán thất bại'}
-          </CardTitle>
-          <CardDescription className="text-white text-xl sm:text-2xl">
-            {isSuccess ? 'Cảm ơn quý khách' : 'Vui lòng thử lại'}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pt-6 space-y-4">
-          <p className="text-2xl sm:text-3xl text-gray-700">
-            {isSuccess ? 'Quý khách đã thanh toán thành công' : 'Thanh toán thất bại'}
-          </p>
-          <p className="text-xl sm:text-2xl text-gray-600">
-            Đơn hàng: <span className="font-bold">{paymentInfo.orderId}</span>
-          </p>
-          <p className="text-xl sm:text-2xl text-gray-600">
-            Số tiền: <span className="font-bold">{parseInt(paymentInfo.transAmount || '0').toLocaleString('vi-VN')} VND</span>
-          </p>
-          <div className="mt-6 text-lg sm:text-xl text-gray-500 space-y-2">
-            <p>Mã giao dịch: <span className="font-semibold">{paymentInfo.orderId}</span></p>
-            <p>Mã lỗi: <span className="font-semibold">{paymentInfo.errorCode}</span></p>
+      <div className="w-full mx-auto bg-white h-screen flex flex-col">
+        <header className="flex justify-between items-center p-3 border-b">
+          <Image
+              src="/VTM.png"
+              alt="Viettel Money"
+              width={120}
+              height={40}
+          />
+        </header>
+
+        <main className="flex-1 flex flex-col mx-auto">
+          <div className="text-center pt-8">
+            <div className="w-48 h-48 mx-auto mb-6">
+              <Image
+                  src={isSuccess ? "/Success.jpg" : "/Fail.jpg"}
+                  alt={isSuccess ? "Success Illustration" : "Error Illustration"}
+                  width={200}
+                  height={200}
+                  priority
+              />
+            </div>
+            <h1 className="text-2xl font-semibold mb-4">
+              {isSuccess ? 'Thanh toán thành công' : 'Thanh toán thất bại'}
+            </h1>
+            <p className="text-4xl font-bold mb-8">
+              {amount}đ
+            </p>
+
+            <div className="space-y-4 text-left border-t border-b py-4">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Số tiền thanh toán</span>
+                <span className="font-medium">{amount}đ</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Mã đơn hàng</span>
+                <span className="font-medium">{paymentInfo.orderId}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Mã lỗi</span>
+                <span className="font-medium">{paymentInfo.errorCode}</span>
+              </div>
+            </div>
           </div>
-        </CardContent>
-      </Card>
-  )
+        </main>
+      </div>
+  );
 }
 
