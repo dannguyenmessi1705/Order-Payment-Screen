@@ -43,7 +43,7 @@ export function PaymentStatus({ searchParams }: PaymentStatusProps) {
             />
           </header>
 
-          <main className="flex-1 flex flex-col items-center px-4 pt-8">
+          <main className="flex-1 flex flex-col items-center px-auto lg:mx-96 pt-8">
             <div className="w-48 h-48 mb-6">
               <Image
                   src="/Fail.jpg"
@@ -78,7 +78,7 @@ export function PaymentStatus({ searchParams }: PaymentStatusProps) {
           />
         </header>
 
-        <main className="flex-1 flex flex-col mx-auto">
+        <main className="flex-1 flex flex-col px-auto lg:mx-96">
           <div className="text-center pt-8">
             <div className="w-48 h-48 mx-auto mb-6">
               <Image
