@@ -105,10 +105,6 @@ export function PaymentStatus({ searchParams }: PaymentStatusProps) {
                 <span className="text-gray-500">Mã đơn hàng</span>
                 <span className="font-medium">{paymentInfo.orderId}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-500">Mã lỗi</span>
-                <span className="font-medium">{paymentInfo.errorCode}</span>
-              </div>
             </div>
           </div>
         </main>
