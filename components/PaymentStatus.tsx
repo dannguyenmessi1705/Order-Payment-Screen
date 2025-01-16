@@ -13,6 +13,8 @@ interface PaymentInfo {
   transAmount: string;
   transactionStatus: string;
   signature: string;
+  errMsg: string;
+  errType: string;
 }
 
 const requiredParams: (keyof PaymentInfo)[] = ['errorCode', 'merchantCode', 'orderId', 'transAmount', 'transactionStatus'];
@@ -27,6 +29,8 @@ export function PaymentStatus({ searchParams }: PaymentStatusProps) {
     transAmount: searchParams.transAmount as string,
     transactionStatus: searchParams.transactionStatus as string,
     signature: searchParams.signature as string,
+    errMsg: searchParams.errMsg as string,
+    errType: searchParams.errType as string,
   };
 
   const missingParams = requiredParams.filter(param => !paymentInfo[param]);
@@ -66,6 +70,15 @@ export function PaymentStatus({ searchParams }: PaymentStatusProps) {
 
   const isSuccess = paymentInfo.transactionStatus === process.env.SUCCESS_CODE;
   const amount = parseInt(paymentInfo.transAmount ?? '0').toLocaleString('vi-VN');
+  let customMessage = paymentInfo.errMsg ?? "";
+  const errorType = paymentInfo.errType ?? "";
+  if (!customMessage) {
+    if (errorType === process.env.OTP_ERROR_CODE) {
+      customMessage = "Giao dịch thất bại do khách hàng nhập sai OTP quá số lần quy định";
+    } else if (errorType === process.env.CANCEL_TRANSACTION_CODE) {
+      customMessage = "Bạn đã hủy giao dịch thành công. Bạn có thể tiếp tục mua sắm và thực hiện lại giao dịch";
+    }
+  }
 
   return (
       <div className="w-full mx-auto bg-white h-screen flex flex-col">
@@ -92,9 +105,15 @@ export function PaymentStatus({ searchParams }: PaymentStatusProps) {
             <h1 className="text-2xl font-semibold mb-4">
               {isSuccess ? 'Thanh toán thành công' : 'Thanh toán thất bại'}
             </h1>
-            <p className="text-4xl font-bold mb-8">
-              {amount}đ
-            </p>
+            {isSuccess ? (
+                <p className="text-4xl font-bold mb-8">
+                  {amount}đ
+                </p>
+            ) : (
+                <p className="text-xl mb-8 text-gray-500">
+                  {customMessage}
+                </p>
+            )}
 
             <div className="space-y-4 text-left border-t border-b py-4">
               <div className="flex justify-between items-center">
